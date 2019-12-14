@@ -5,7 +5,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN || '');
 bot.on('message', (ctx) => ctx.reply('Test~'));
 
 const main = async () => {
-  // await bot.launch();
+  await bot.launch();
   http.createServer((req, res) => {
     res.end('Test~');
   }).listen();
