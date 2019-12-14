@@ -1,14 +1,11 @@
-import Telegraf from 'telegraf';
 import http from 'http';
-
-const bot = new Telegraf(process.env.BOT_TOKEN || '');
-bot.on('message', (ctx) => ctx.reply('Test~'));
+import bot from './bot';
 
 const main = async () => {
   await bot.launch();
   http.createServer((req, res) => {
     res.end('Test~');
-  }).listen(80);
+  }).listen(process.env.PORT || 3000);
 };
 
 main().catch(err => console.error(err));
