@@ -8,7 +8,7 @@ const main = async () => {
   await bot.launch();
   http.createServer((req, res) => {
     res.end('Test~');
-  }).listen();
+  }).listen(80);
 };
 
 main().catch(err => console.error(err));
