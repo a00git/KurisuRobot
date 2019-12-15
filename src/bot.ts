@@ -20,13 +20,21 @@ bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
   const response = await fetch('https://dreamingrobot.herokuapp.com/');
   const html = await response.text();
   const dom = new JSDOM(html);
-  const hps = dom.window.document.querySelectorAll('.heart').length;
+  const htmlCollection = dom.window.document.querySelectorAll('a')[1].children;
+  const health = Array.from(htmlCollection).reduce((hp, img) => {
+    switch (img.alt) {
+      case 'Full heart': return hp + 1;
+      case 'Empty heart': return hp + 0.5;
+      default: return hp;
+    }
+  }, 0);
+
   return answerInlineQuery([{
     id: '1',
     type: 'article',
     title: `DB's health`,
     input_message_content: {
-      message_text: `DB is at ${hps} hearts out of 5`,
+      message_text: `DB: ${health} HPs`,
     },
   }]);
 });
