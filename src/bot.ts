@@ -24,7 +24,7 @@ const getDBsHealth = async (): Promise<number> => {
   return parseHtml(html).reduce((hp, img) => {
     switch (img.alt) {
       case 'Full heart': return hp + 1;
-      case 'Empty heart': return hp + 0.5;
+      case 'Half heart': return hp + 0.5;
       default: return hp;
     }
   }, 0);
