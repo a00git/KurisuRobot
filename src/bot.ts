@@ -14,7 +14,7 @@ bot.command('receive', ctx => {
 
 bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
   if (inlineQuery?.query !== 'db') {
-    return;
+    return answerInlineQuery([]);
   }
 
   const response = await fetch('https://dreamingrobot.herokuapp.com/');
