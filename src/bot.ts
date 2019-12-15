@@ -2,8 +2,6 @@ import Telegraf from 'telegraf';
 
 const bot = new Telegraf(process.env.BOT_TOKEN || '');
 
-bot.on('message', (ctx) => ctx.reply('Test~'));
-
 bot.command('send', ctx => {
   ctx.reply('Fake command for sending messages into the past');
 });
