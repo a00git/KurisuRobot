@@ -12,22 +12,30 @@ bot.command('receive', ctx => {
   ctx.reply('This command will generate random messages from the future');
 });
 
-bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
-  if (inlineQuery?.query !== 'db') {
-    return answerInlineQuery([]);
-  }
-
-  const response = await fetch('https://dreamingrobot.herokuapp.com/');
-  const html = await response.text();
+const parseHtml = (html: string): HTMLImageElement[] => {
   const dom = new JSDOM(html);
   const htmlCollection = dom.window.document.querySelectorAll('a')[1].children;
-  const health = Array.from(htmlCollection).reduce((hp, img) => {
+  return Array.from(htmlCollection) as HTMLImageElement[];
+};
+
+const getDBsHealth = async (): Promise<number> => {
+  const response = await fetch('https://dreamingrobot.herokuapp.com/');
+  const html = await response.text();
+  return parseHtml(html).reduce((hp, img) => {
     switch (img.alt) {
       case 'Full heart': return hp + 1;
       case 'Empty heart': return hp + 0.5;
       default: return hp;
     }
   }, 0);
+};
+
+bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
+  if (inlineQuery?.query !== 'db') {
+    return answerInlineQuery([]);
+  }
+
+  const health = await getDBsHealth();
 
   return answerInlineQuery([{
     id: '1',
