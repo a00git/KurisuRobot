@@ -38,9 +38,25 @@ const setupInlineMode: SetupFunc<InlineCommands> = (commands) => (bot): Bot => {
   return bot;
 };
 
+const logsChannelId = process.env.LOGS_CHANNEL || '';
+
+const setupLoggingIntoChannel: ApplierFunc = (bot) => {
+  bot.use(async (ctx, next) => {
+    const author = ctx.message?.from ?? 'unknown source';
+    const text = ctx.message?.text ?? 'can\'t display message';
+    ctx.telegram.sendMessage(logsChannelId, `${author}: ${text}`);
+    if (next) {
+      await next();
+    };
+  });
+
+  return bot;
+};
+
 const bot = new Telegraf(process.env.BOT_TOKEN || '');
 
 export default compose(
   setupCommands(commands),
-  setupInlineMode(inlineCommands)
+  setupInlineMode(inlineCommands),
+  setupLoggingIntoChannel
 )(bot);
