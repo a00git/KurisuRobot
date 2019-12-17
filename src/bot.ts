@@ -1,54 +1,46 @@
-import Telegraf from 'telegraf';
-import fetch from 'node-fetch';
-import { JSDOM } from 'jsdom';
+import Telegraf, { ContextMessageUpdate } from 'telegraf';
+import { commands, inlineCommands, Commands, InlineCommands } from './kurisu';
+
+type Bot = Telegraf<ContextMessageUpdate>;
+type ApplierFunc = (b: Bot) => Bot;
+type SetupFunc<Coms> = (coms: Coms) => ApplierFunc;
+
+const compose = (...funcs: ApplierFunc[]) => (target: Bot): Bot => funcs.reduce((t, f) => f(t), target);
+
+const setupCommands: SetupFunc<Commands> = (commands) => (bot): Bot => {
+  Object.entries(commands).forEach(([path, func]) => {
+    bot.command(path, ctx => ctx.replyWithMarkdown(func()));
+  });
+  return bot;
+};
+
+const setupInlineMode: SetupFunc<InlineCommands> = (commands) => (bot): Bot => {
+  bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
+    const query = inlineQuery?.query || '';
+
+    if (!(query in commands)) {
+      return answerInlineQuery([]);
+    }
+
+    const messages = await commands[query]();
+    const answers = messages.map((msg, idx) => ({
+      id: String(idx),
+      type: 'article',
+      title: msg,
+      input_message_content: {
+        message_text: msg,
+      },
+    }));
+
+    return answerInlineQuery(answers);
+  });
+
+  return bot;
+};
 
 const bot = new Telegraf(process.env.BOT_TOKEN || '');
 
-bot.command('send', ctx => {
-  ctx.reply('Fake command for sending messages into the past');
-});
-
-bot.command('receive', ctx => {
-  ctx.reply('This command will generate random messages from the future');
-});
-
-bot.command('pet', ctx => {
-  ctx.replyWithMarkdown('_\*purr\*~_');
-});
-
-const parseHtml = (html: string): HTMLImageElement[] => {
-  const dom = new JSDOM(html);
-  const htmlCollection = dom.window.document.querySelectorAll('a')[1].children;
-  return Array.from(htmlCollection) as HTMLImageElement[];
-};
-
-const getDBsHealth = async (): Promise<number> => {
-  const response = await fetch('https://dreamingrobot.herokuapp.com/');
-  const html = await response.text();
-  return parseHtml(html).reduce((hp, img) => {
-    switch (img.alt) {
-      case 'Full heart': return hp + 1;
-      case 'Half heart': return hp + 0.5;
-      default: return hp;
-    }
-  }, 0);
-};
-
-bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
-  if (inlineQuery?.query !== 'db') {
-    return answerInlineQuery([]);
-  }
-
-  const health = await getDBsHealth();
-
-  return answerInlineQuery([{
-    id: '1',
-    type: 'article',
-    title: `DB's health`,
-    input_message_content: {
-      message_text: `DB: ${health} HPs`,
-    },
-  }]);
-});
-
-export default bot;
+export default compose(
+  setupCommands(commands),
+  setupInlineMode(inlineCommands)
+)(bot);
