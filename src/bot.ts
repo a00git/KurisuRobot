@@ -41,13 +41,10 @@ const setupInlineMode: SetupFunc<InlineCommands> = (commands) => (bot): Bot => {
 const logsChannelId = process.env.LOGS_CHANNEL || '';
 
 const setupLoggingIntoChannel: ApplierFunc = (bot) => {
-  bot.use(async (ctx, next) => {
+  bot.on('message', (ctx) => {
     const author = ctx.message?.from?.username ?? 'unknown source';
     const text = ctx.message?.text ?? 'can\'t display message';
     ctx.telegram.sendMessage(logsChannelId, `${author}: ${text}`);
-    if (next) {
-      await next();
-    };
   });
 
   return bot;
