@@ -40,13 +40,25 @@ const setupInlineMode: SetupFunc<InlineCommands> = (commands) => (bot): Bot => {
 
 const logsChannelId = process.env.LOGS_CHANNEL || '';
 
+const extractTextFromUpdate = (ctx: ContextMessageUpdate): string => {
+  switch (ctx.updateType) {
+    case 'message':
+      return ctx.message?.text ?? ctx.message?.sticker?.emoji ?? 'can\'t display message';
+    case 'edited_message':
+      return ctx.editedMessage?.text || 'can\'t display edit';
+    case 'inline_query':
+      return ctx.inlineQuery?.query || 'can\'t display query';
+    case 'chosen_inline_result':
+      return ctx.chosenInlineResult?.query || 'can\'t display chosen query';
+    default:
+      return 'unsupported type';
+  }
+};
+
 const setupLoggingIntoChannel: ApplierFunc = (bot) => {
   bot.use(async (ctx, next) => {
-    const text = ctx.update.message?.text ||
-      ctx.update.edited_message?.text ||
-      ctx.update.callback_query?.data ||
-      'can\'t display message';
-    const author = ctx.update.message?.from?.username;
+    const text = extractTextFromUpdate(ctx);
+    const author = ctx.update.message?.from?.username ?? 'unknown source';
 
     ctx.telegram.sendMessage(logsChannelId, `${author}: ${text}`);
     if (next) {
