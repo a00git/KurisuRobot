@@ -42,8 +42,12 @@ const logsChannelId = process.env.LOGS_CHANNEL || '';
 
 const setupLoggingIntoChannel: ApplierFunc = (bot) => {
   bot.use(async (ctx, next) => {
-    const author = ctx.message?.from?.username ?? 'unknown source';
-    const text = ctx.message?.text ?? 'can\'t display message';
+    const text = ctx.update.message?.text ||
+      ctx.update.edited_message?.text ||
+      ctx.update.callback_query?.data ||
+      'can\'t display message';
+    const author = ctx.update.message?.from?.username;
+
     ctx.telegram.sendMessage(logsChannelId, `${author}: ${text}`);
     if (next) {
       await next();
