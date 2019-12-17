@@ -12,6 +12,10 @@ bot.command('receive', ctx => {
   ctx.reply('This command will generate random messages from the future');
 });
 
+bot.command('pet', ctx => {
+  ctx.replyWithMarkdown('_\*purr\*~_');
+});
+
 const parseHtml = (html: string): HTMLImageElement[] => {
   const dom = new JSDOM(html);
   const htmlCollection = dom.window.document.querySelectorAll('a')[1].children;
