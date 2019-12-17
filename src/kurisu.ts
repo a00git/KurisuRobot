@@ -10,7 +10,14 @@ export const commands: Commands = {
   pet: () => '_\*purr\*~_',
   send: () => 'Fake command for sending messages into the past',
   receive: () => 'This command will generate random messages from the future',
-  echo: (args?: string) => args?.split(' ').slice(1).join(' ') ?? '',
+  echo: (args?: string) => {
+    if (!args) {
+      return '...';
+    }
+    return args?.length === 5
+      ? '...'
+      : args?.split(' ').slice(1).join(' ');
+  },
 };
 
 export const inlineCommands: InlineCommands = {
