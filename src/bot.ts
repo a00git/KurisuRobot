@@ -42,10 +42,6 @@ const logsChannelId = process.env.LOGS_CHANNEL || '';
 
 const extractTextFromUpdate = (ctx: ContextMessageUpdate): string => {
   switch (ctx.updateType) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
-    case 'text':
-      return ctx.message?.text ?? ctx.message?.sticker?.emoji ?? 'can\'t display message';
     case 'message':
       return ctx.message?.text ?? ctx.message?.sticker?.emoji ?? 'can\'t display message';
     case 'edited_message':
@@ -62,7 +58,7 @@ const extractTextFromUpdate = (ctx: ContextMessageUpdate): string => {
 const setupLoggingIntoChannel: ApplierFunc = (bot) => {
   bot.use(async (ctx, next) => {
     const text = extractTextFromUpdate(ctx);
-    const author = ctx.message?.from?.username ?? 'unknown source';
+    const author = ctx.update.message?.from?.username ?? 'unknown source';
 
     ctx.telegram.sendMessage(logsChannelId, `${author}: ${text}`);
     if (next) {
