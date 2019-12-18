@@ -1,6 +1,6 @@
 jest.mock('node-fetch');
 
-import { getDBsHealth } from '../dreambot';
+import { getDBsHealth } from '../kurisu/dreambot';
 import fetch from 'node-fetch';
 
 const { Response } = jest.requireActual('node-fetch');
