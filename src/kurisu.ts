@@ -6,8 +6,6 @@ type InlineCommand = (args?: string[]) => Promise<string[]>;
 export type Commands = { [key: string]: Command };
 export type InlineCommands = { [key: string]: InlineCommand };
 
-const randomElementFrom = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
-
 export const commands: Commands = {
   pet: () => '_\*purr\*~_',
   send: () => 'Fake command for sending messages into the past',
