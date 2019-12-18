@@ -32,6 +32,6 @@ export const inlineCommands: InlineCommands = {
       'Who\'ll eat a pervert\'s banana anyway?',
       '99.9% of science is boring.'
     ];
-    return [randomElementFrom<string>(quotes)];
+    return quotes;
   },
 };
