@@ -2,6 +2,10 @@ import { ContextMessageUpdate } from 'telegraf';
 
 export const randomElementFrom = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
+export const body = (text: string): string => `<html><body>${text}</body></html>`;
+export const paragraph = (text: string): string => `<p>${text}</p>`;
+export const link = (text: string, url: string): string => `<a href="${url}">${text}</a>`;
+
 export type ChainableFunc<T> = (arg: T) => T;
 export const compose = <R>(...funcs: ChainableFunc<R>[]) => (target: R): R => funcs.reduce((t, f) => f(t), target);
 
