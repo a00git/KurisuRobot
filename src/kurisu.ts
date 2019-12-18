@@ -6,6 +6,8 @@ type InlineCommand = (args?: string[]) => Promise<string[]>;
 export type Commands = { [key: string]: Command };
 export type InlineCommands = { [key: string]: InlineCommand };
 
+const randomElementFrom = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
 export const commands: Commands = {
   pet: () => '_\*purr\*~_',
   send: () => 'Fake command for sending messages into the past',
@@ -24,5 +26,14 @@ export const inlineCommands: InlineCommands = {
   db: async () => {
     const health = await getDBsHealth();
     return [`DB has ${health} HPs`];
+  },
+  quote: async() => {
+    const quotes = [
+      'Something must be wrong for you to use my actual name.',
+      'Say it right, Hououin Pervert-Kyouma!',
+      'Who\'ll eat a pervert\'s banana anyway?',
+      '99.9% of science is boring.'
+    ];
+    return [randomElementFrom<string>(quotes)];
   },
 };
