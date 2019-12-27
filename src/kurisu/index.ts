@@ -1,8 +1,14 @@
 import Roll from 'roll';
 import { getDBsHealth } from './dreambot';
 
-type Command = (args?: string) => string;
-type InlineCommand = (args?: string[]) => Promise<string[]>;
+interface InlineCommandResult {
+  title: string;
+  message: string;
+  cache: number;
+};
+
+export type Command = (args?: string) => string;
+export type InlineCommand = (args?: string[]) => Promise<InlineCommandResult[]>;
 
 export type Commands = { [key: string]: Command };
 export type InlineCommands = { [key: string]: InlineCommand };

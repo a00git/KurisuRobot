@@ -16,12 +16,12 @@ const setupInlineMode: SetupFunc<InlineCommands> = (commands) => (bot): Bot => {
     }
 
     const messages = await commands[command](args);
-    const answers = messages.map((msg, idx) => ({
+    const answers = messages.map((result, idx) => ({
       id: String(idx),
       type: 'article',
-      title: msg,
+      title: result.title,
       input_message_content: {
-        message_text: msg,
+        message_text: result.message,
       },
     }));
 
