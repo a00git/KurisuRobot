@@ -9,14 +9,13 @@ const splitIntoCommandAndArgs = (str: string): [string, string[]] =>
 
 const setupInlineMode: SetupFunc<InlineCommands> = (commands) => (bot): Bot => {
   bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
-    const query = inlineQuery?.query || '';
-    const [command, args] = splitIntoCommandAndArgs(query);
+    const [command, args] = splitIntoCommandAndArgs(inlineQuery?.query || '');
 
     if (!(command in commands)) {
       return answerInlineQuery([]);
     }
 
-    const messages = await commands[query](args);
+    const messages = await commands[command](args);
     const answers = messages.map((msg, idx) => ({
       id: String(idx),
       type: 'article',
