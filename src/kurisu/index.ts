@@ -43,7 +43,7 @@ export const inlineCommands: InlineCommands = {
 
     const roller = new Roll;
     const dices = args.join('');
-    const result = roller.validate(dices) ? roller.roll(dices).result : defaultAnswer;
-    return [String(result)];
+    const result = roller.validate(dices) ? `${dices}: ${roller.roll(dices).result}` : defaultAnswer;
+    return [result];
   },
 };
