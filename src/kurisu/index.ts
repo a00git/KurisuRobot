@@ -36,12 +36,14 @@ export const inlineCommands: InlineCommands = {
     return quotes;
   },
   roll: async (args) => {
-    if (args && args.length > 0) {
-      const roller = new Roll;
-      const dices = args.join('');
-      const result = roller.validate(dices) ? roller.roll(dices).result : [];
-      return [String(result)];
+    const defaultAnswer = 'Looks like your roll query isn\'t valid.';
+    if (args == null || args.length === 0) {
+      return [defaultAnswer];
     }
-    return [];
+
+    const roller = new Roll;
+    const dices = args.join('');
+    const result = roller.validate(dices) ? roller.roll(dices).result : defaultAnswer;
+    return [String(result)];
   },
 };
