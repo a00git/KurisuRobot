@@ -26,7 +26,7 @@ const setupInlineMode: SetupFunc<InlineCommands> = (commands) => (bot): Bot => {
     }));
 
     // TODO: define cache_time parameter in InlineCommands
-    return answerInlineQuery(answers, { cache_time: 30 });
+    return answerInlineQuery(answers, { cache_time: 0 });
   });
 
   return bot;
