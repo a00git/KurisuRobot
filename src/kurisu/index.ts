@@ -36,8 +36,11 @@ export const inlineCommands: InlineCommands = {
     return quotes;
   },
   roll: async (args) => {
-    const roller = new Roll;
-    const { result } = roller.roll(args?.join('') || '');
-    return [String(result)];
+    if (args && args.length > 0) {
+      const roller = new Roll;
+      const { result } = roller.roll(args.join(''));
+      return [String(result)];
+    }
+    return [];
   },
 };
