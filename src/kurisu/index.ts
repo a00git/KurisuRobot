@@ -37,8 +37,9 @@ export const inlineCommands: InlineCommands = {
   },
   roll: async (args) => {
     if (args && args.length > 0) {
-      const roller = new Roll;
-      const { result } = roller.roll(args.join(''));
+      const { roll, validate } = new Roll;
+      const dices = args.join('');
+      const result = validate(dices) ? roll(dices).result : [];
       return [String(result)];
     }
     return [];
