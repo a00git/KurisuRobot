@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "dayjs": "^1.8.18",
-    "jsdom": "^15.2.1",
+    "jsdom": "^16.5.0",
     "node-fetch": "^2.6.1",
     "roll": "^1.2.0",
     "telegraf": "^3.34.1"
